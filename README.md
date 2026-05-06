@@ -85,4 +85,3 @@ pub struct Event {
 
 ## License
 MIT
-```
