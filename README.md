@@ -21,7 +21,7 @@ To use this patched version in your Rust project, add the following to your `Car
 
 ```toml
 [dependencies]
-rdev = { git = "[https://github.com/YOUR_USERNAME/rdev-deadkeys-fix.git](https://github.com/YOUR_USERNAME/rdev-deadkeys-fix.git)", branch = "master" }
+rdev = { git = "[https://github.com/luisoncpp/rdev-deadkeys-fix.git](https://github.com/luisoncpp/rdev-deadkeys-fix.git)", branch = "master" }
 ```
 
 ---
