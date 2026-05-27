@@ -85,7 +85,7 @@ impl Keyboard {
             let mut buff = [0_u16; BUF_LEN as usize];
             let buff_ptr = buff.as_mut_ptr();
             let layout = GetKeyboardLayout(current_window_thread_id);
-            let len = ToUnicodeEx(code, scan_code, state_ptr, buff_ptr, 8 - 1, 0, layout);
+            let len = ToUnicodeEx(code, scan_code, state_ptr, buff_ptr, 8 - 1, 4, layout);
 
             let mut is_dead = false;
             let result = match len {
@@ -109,7 +109,7 @@ impl Keyboard {
                     last_state_ptr,
                     buff_ptr,
                     BUF_LEN,
-                    0,
+                    4,
                     layout,
                 );
                 self.last_code = 0;
@@ -132,7 +132,7 @@ impl Keyboard {
 
             let mut len = -1;
             while len < 0 {
-                len = ToUnicodeEx(code, scan_code, state_ptr, buff_ptr, BUF_LEN, 0, layout);
+                len = ToUnicodeEx(code, scan_code, state_ptr, buff_ptr, BUF_LEN, 4, layout);
             }
         }
     }
