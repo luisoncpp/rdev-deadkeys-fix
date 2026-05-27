@@ -15,6 +15,8 @@ const VK_CAPITAL_: usize = VK_CAPITAL as usize;
 const VK_LSHIFT_: usize = VK_LSHIFT as usize;
 const VK_RSHIFT_: usize = VK_RSHIFT as usize;
 const HIGHBIT: u8 = 0x80;
+const TUE_NOCONSUME: u32 = 4;
+const BUF_LEN: i32 = 32;
 
 pub struct Keyboard {
     last_code: UINT,
@@ -81,11 +83,12 @@ impl Keyboard {
             let current_window_thread_id =
                 GetWindowThreadProcessId(GetForegroundWindow(), null_mut());
             let state_ptr = self.last_state.as_mut_ptr();
-            const BUF_LEN: i32 = 32;
+
             let mut buff = [0_u16; BUF_LEN as usize];
             let buff_ptr = buff.as_mut_ptr();
             let layout = GetKeyboardLayout(current_window_thread_id);
-            let len = ToUnicodeEx(code, scan_code, state_ptr, buff_ptr, 8 - 1, 4, layout);
+            let len = ToUnicodeEx(code, scan_code, state_ptr, buff_ptr, 8 - 1, 0, layout);
+            let len = ToUnicodeEx(code, scan_code, state_ptr, buff_ptr, 8 - 1, TUE_NOCONSUME, layout);
 
             let mut is_dead = false;
             let result = match len {
@@ -109,7 +112,7 @@ impl Keyboard {
                     last_state_ptr,
                     buff_ptr,
                     BUF_LEN,
-                    4,
+                    TUE_NOCONSUME,
                     layout,
                 );
                 self.last_code = 0;
@@ -124,15 +127,16 @@ impl Keyboard {
 
     unsafe fn clear_keyboard_buffer(&self, code: UINT, scan_code: UINT, layout: HKL) {
         unsafe {
-            const BUF_LEN: i32 = 32;
+
             let mut buff = [0_u16; BUF_LEN as usize];
             let buff_ptr = buff.as_mut_ptr();
             let mut state = [0_u8; 256];
             let state_ptr = state.as_mut_ptr();
 
+
             let mut len = -1;
             while len < 0 {
-                len = ToUnicodeEx(code, scan_code, state_ptr, buff_ptr, BUF_LEN, 4, layout);
+                len = ToUnicodeEx(code, scan_code, state_ptr, buff_ptr, BUF_LEN, TUE_NOCONSUME, layout);
             }
         }
     }
